@@ -1,0 +1,15 @@
+{
+  "name": "sql-class",
+  "version": "1.0.0",
+  "description": "\"learn the first time sql\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "\"Ms Suraj",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "mysql2": "^3.11.4"
+  }
+}
