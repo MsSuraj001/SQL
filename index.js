@@ -1,5 +1,8 @@
 const { faker } = require("@faker-js/faker");
 const  mysql  = require('mysql2');
+const express = require('express');
+
+const app = express();
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -36,21 +39,37 @@ const connection = mysql.createConnection({
     
   }
 
-  try{
-    connection.query(q, [data], (err, result)=>{
-        if(err) throw err;
-        console.log(result);
-        // console.log(result.length);
-        // console.log(result[0]);
-        // console.log(result[1]);
-      })
-  }catch(error){
-    console.log("connection error");
-    console.log(error);
-  }
+  // try{
+  //   connection.query(q, [data], (err, result)=>{
+  //       if(err) throw err;
+  //       console.log(result);
+  //       // console.log(result.length);
+  //       // console.log(result[0]);
+  //       // console.log(result[1]);
+  //     })
+  // }catch(error){
+  //   console.log("connection error");
+  //   console.log(error);
+  // }
 
-  connection.end();
+  // connection.end();
 
+  app.get("/", (req, res)=>{
+    let q = "SELECT count(*) FROM user";
+    try{
+      connection.query(q, [data], (err, result)=>{
+          if(err) throw err;
+          console.log(result[0]["count(*)"])
+          res.send(result)
+        })
+    }catch(error){
+      res.send("Fetching the data error")
+    }
+  })
+
+app.listen("8080", ()=>{
+  console.log("Server start at the port 8080")
+})
 
 
 //   console.log(createRandomUser());
