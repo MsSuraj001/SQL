@@ -8,20 +8,36 @@ const connection = mysql.createConnection({
     password: 'mssuraj007'
   });
 
+  let createRandomUser =  () => {
+    return [
+      faker.string.uuid(),
+      faker.internet.username(), // before version 9.1.0, use userName()
+      faker.internet.email(),
+      faker.internet.password(),
+    ];
+  }
+
   // Inserting the single data 
   // const q = "INSERT INTO user (id, username, email, password) VALUES (?, ?, ?, ?)";
   // let user = ["123", "abc123", "abc@gmail.com", "1234"];
 
 
   // Inserting the single data 
+  // const q = "INSERT INTO user (id, username, email, password) VALUES ?";
+  // let users = [
+  //   ["123a", "abc123a", "abca@gmail.com", "1234a"],
+  //   ["123b", "abc123b", "abcb@gmail.com", "1234b"]
+  // ];
+
   const q = "INSERT INTO user (id, username, email, password) VALUES ?";
-  let users = [
-    ["123a", "abc123a", "abca@gmail.com", "1234a"],
-    ["123b", "abc123b", "abcb@gmail.com", "1234b"]
-  ];
+  let data = [];
+  for(let i= 1; i <= 100; i++){
+    data.push(createRandomUser());
+    
+  }
 
   try{
-    connection.query(q, [users], (err, result)=>{
+    connection.query(q, [data], (err, result)=>{
         if(err) throw err;
         console.log(result);
         // console.log(result.length);
@@ -35,16 +51,6 @@ const connection = mysql.createConnection({
 
   connection.end();
 
-let createRandomUser =  () => {
-    return {
-      userId: faker.string.uuid(),
-      username: faker.internet.username(), // before version 9.1.0, use userName()
-      email: faker.internet.email(),
-      avatar: faker.image.avatar(),
-      password: faker.internet.password(),
-      birthdate: faker.date.birthdate(),
-      registeredAt: faker.date.past(),
-    };
-  }
+
 
 //   console.log(createRandomUser());
