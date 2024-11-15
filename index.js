@@ -70,6 +70,20 @@ const connection = mysql.createConnection({
     }
   })
 
+  //fetch the user
+  app.get("/user", (req, res)=>{
+    let q = "SELECT * FROM user";
+    try{
+      connection.query(q, (err, users)=>{
+          if(err) throw err;
+          // let count = result[0]["count(*)"];
+          res.render("showallusers.ejs", { users })
+        })
+    }catch(error){
+      res.send("Fetching the all user error")
+    }
+  })
+
 app.listen("8080", ()=>{
   console.log("Server start at the port 8080")
 })
