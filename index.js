@@ -2,8 +2,12 @@ const { faker } = require("@faker-js/faker");
 const  mysql  = require('mysql2');
 const express = require('express');
 const path = require("path");
+const { log } = require("console");
 const app = express();
+const methodOverride = require("method-override");
 
+app.use(methodOverride("_method"));
+app.use(express.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"))
 
@@ -81,6 +85,52 @@ const connection = mysql.createConnection({
         })
     }catch(error){
       res.send("Fetching the all user error")
+    }
+  })
+
+  //Edit the user
+  app.get("/user/:id/edit", (req, res)=>{
+    let { id } = req.params;
+    let q = `SELECT * FROM user WHERE id='${id}'`;
+
+    try{
+      connection.query(q, (err, result)=>{
+        if(err) throw err;
+        // console.log(user);
+        let user = result[0];
+        // console.log(user);
+        res.render("edit.ejs", { user });
+      })
+    }catch(error){
+      console.log(error);
+      res.send("some error in fetch the user")
+    }
+  })
+
+  // Update (DB) route
+  app.patch("/user/:id", (req, res)=>{
+    let { id } = req.params;
+    let {password : formPass, username : newUsername} = req.body;
+    let q = `SELECT * FROM user WHERE id='${id}'`;
+
+    try{
+      connection.query(q, (err, result)=>{
+        if(err) throw err;
+        let user = result[0];
+        if(formPass != user.password){
+          res.send("Password is not correct");
+        }else{
+          let q2 = `UPDATE user SET username='${newUsername}' WHERE id='${id}'`; 
+          connection.query(q2, (err, result)=>{
+            if(err) throw err;
+            res.redirect("/user");
+          })
+        }
+        // res.send(user)
+      })
+    }catch(error){
+      console.log(error);
+      res.send("some error in DB")
     }
   })
 
